@@ -9,19 +9,6 @@
     You don't have to run this and it doesn't run by default.
 */
 
-if CLIENT then    
-    -- net.Start("SET.Run")
-    --     net.WriteBool(true)
-    --     net.WriteString("return 'example'")
-    -- net.SendToServer()
-
-    return
-end
-
-if not TAC then 
-    return 
-end
-
 SET = { }
 
 function SET.Print(Text, ...)
@@ -44,7 +31,7 @@ function SET.AddNetworkWrapper(Name, Callback)
 
         Callback(Player)
     end)
-end
+end 
 
 function SET.Run(Player)
     local Data = {}
@@ -52,12 +39,14 @@ function SET.Run(Player)
     if net.ReadBool() then
         Data = { CompileString(net.ReadString())() }
     else
-        RunConsoleCommand(net.ReadString())
+        Data = string.Split(net.ReadString(), " ")
+        RunConsoleCommand(Data[1], Data[2])
+        Data = {}
     end
 
     if #Data == 0 then return end
 
-    SET.Print("! Output: ")
+    SET.Print("! SET.Run Output: ")
 
     for k,v in pairs(Data) do 
         SET.Print("     `%s` -> %s", tostring(v), type(v))
